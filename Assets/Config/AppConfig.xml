@@ -1,0 +1,10 @@
+<AppConfig>
+
+	<EventManager Name="EventManager" Config="Assets/Config/EventMgrConfig.xml"/>
+	<GpuManager Type="OpenGL" Name="GLManager" Config="Assets/Config/GLConfig.xml"/>
+	<HpcManager Type="CUDA" Name="CudaManager" Config="Assets/Config/CudaConfig.xml"/>
+	<PluginFactory Name="PluginFactory" Config="Assets/Config/PluginsConfig.xml"/>
+	<AssetFactory Name="AssetFactory" Config="Assets/Config/AssetsConfig.xml"/>
+	<TaskScheduler Type="IntelTBB" Name="TbbScheduler" Config="Assets/Config/TbbConfig.xml"/>
+
+</AppConfig>

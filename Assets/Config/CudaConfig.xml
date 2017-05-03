@@ -1,0 +1,6 @@
+<HPCConfig>
+
+	<HpcManager Type="CPU" Config="Assets/Config/CpuHpcConfig.xml"/>
+	<HpcManager Type="CUDA" Config="Assets/Config/CudaConfig.xml"/>
+
+</HPCConfig>

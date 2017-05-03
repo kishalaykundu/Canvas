@@ -1,0 +1,18 @@
+// custom-defined macros passed through cmake flags
+#pragma once
+
+#cmakedefine SIM_GL_ENABLED
+#cmakedefine SIM_VK_ENABLED
+#cmakedefine SIM_DX_ENABLED
+
+#cmakedefine SIM_CL_ENABLED
+#cmakedefine SIM_CUDA_ENABLED
+#cmakedefine SIM_DIRECTCOMPUTE_ENABLED
+
+#cmakedefine SIM_TBB_SCHEDULER_ENABLED
+#cmakedefine SIM_THREAD_SCHEDULER_ENABLED
+
+#cmakedefine SIM_LOG_ENABLED
+#cmakedefine SIM_VECTOR3_ENABLED
+#cmakedefine SIM_VECTOR4_ENABLED
+#cmakedefine SIM_DOUBLE_PRECISION

@@ -1,0 +1,55 @@
+<VMConfig>
+	
+	<Data Location="Assets/Data/VoxelMan/InnerOrgans"/>
+	
+	<RGB Location="pngrgb" Prefix="rgb"/>
+	<CT Location="pngCT" Prefix="frozenCT"/>
+	<Mask Location="labels" Prefix="labels"/>
+	
+	<Images Width="573" Height="330"/>
+	<Indices From="1256" To="2029"/>
+	
+	<Segments Count="4">
+		
+		<Data Name="GallBladder" Output="Assets/Data/GallBladder/">
+			<Labels Count="1">
+				<Item>1002</Item>
+			</Labels>
+		</Data>
+		
+		<Data Name="LeftKidney" Output="Assets/Data/LeftKidney/">
+			<Labels Count="2">
+				<Item>1531</Item>
+				<Item>1532</Item>
+			</Labels>
+		</Data>
+		
+		<Data Name="RightKidney" Output="Assets/Data/RightKidney/">
+			<Labels Count="2">
+				<Item>1534</Item>
+				<Item>1536</Item>
+			</Labels>
+		</Data>
+		
+		<Data Name="Liver" Output="Assets/Data/Liver/">
+			<Labels Count="14">
+				<Item>3001</Item>
+				<Item>3002</Item>
+				<Item>3003</Item>
+				<Item>3005</Item>
+				<Item>3006</Item>
+				<Item>3007</Item>
+				<Item>3008</Item>
+				<Item>3009</Item>
+				<Item>3010</Item>
+				<Item>3011</Item>
+				<Item>3012</Item>
+				<Item>3013</Item>
+				<Item>4020</Item>
+				<Item>4030</Item>
+			</Labels>
+		</Data>
+		
+	</Segments>
+
+</VMConfig>

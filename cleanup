@@ -1,0 +1,18 @@
+#! /bin/bash
+
+if [ "$#" -eq 0 ];
+then
+	rm -rf ./Build/*;
+elif [ "$1" == "all" ];
+then
+	rm -rf ./Build/*;
+	rm -rf ./Bin/*;
+	rm -rf ./Lib/*;
+elif [ "$1" == "--help" ];
+then
+	echo "Cleanup options:";
+	echo -e "./cleanup\t - deletes all build files"
+	echo -e "./cleanup all\t - deletes all Build/Bin/Lib files"
+else 
+	rm -rf ./$1
+fi

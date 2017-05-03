@@ -1,0 +1,8 @@
+Assets/Data/*
+Bin/*
+Build/*
+Lib/*
+.DS_Store
+.cproject
+.project
+.settings

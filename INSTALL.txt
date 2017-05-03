@@ -1,0 +1,21 @@
+Canvas uses Cmake system to configure and build the simulation framework.
+
+NOTE: ALL SCRIPTS MUST BE RUN IN THE PROJECT FOLDER
+
+This installation guide is for users on Linux or MacOSX.
+
+Before installation:
+Run "./install --help" for available options and minimum system specs. The install options are
+mostly same as the cmake options passed by the installation script to cmake. The installation
+script does not check your system for minimum specs. It just tells you what it requires for
+successful compilation. The checking is left up to the user.
+
+To build and install:
+Run the script "./install" in the project folder. For our project, we use a separate 'Build' 
+folder to keep things clean between different builds. Since CMake is a pain when it comes to
+automatically designate separate build folders through command line options, we use bash shell
+script "install" to automate a clean build.
+
+To clean:
+Run "./cleanup --help" to view all cleanup options. Run the script "./cleanup" with available
+options.

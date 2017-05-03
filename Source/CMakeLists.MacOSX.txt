@@ -1,0 +1,31 @@
+# OSX-specific libraries
+
+# Common paths and libraries used through the project
+find_library (MATH_LIB m REQUIRED)
+message (STATUS "")
+message (STATUS "Found Math library: " ${MATH_LIB})
+	
+find_library (DL_LIB dl REQUIRED)
+message (STATUS "")
+message (STATUS "Found Dynamic Loader library: " ${DL_LIB})
+	
+find_library (THREAD_LIB pthread REQUIRED)
+message (STATUS "")
+message (STATUS "Found Thread library: " ${THREAD_LIB})
+
+if (NOT GPU_PACKAGE OR GPU_PACKAGE STREQUAL "OpenGL")
+	find_package (OpenGL REQUIRED)
+	message (STATUS "")
+	message (STATUS "Found OpenGL package")
+endif ()
+
+if (COMPUTE_PACKAGE STREQUAL "CUDA")
+	find_package (CUDA REQUIRED)
+	message (STATUS "")
+	message (STATUS "Found CUDA package")
+	set (${CUDA_NVCC_FLAGS} "-O3 -gencode -Wall")
+elseif (COMPUTE_PACKAGE STREQUAL "OpenCL")
+	find_package (OpenCL REQUIRED)
+	message (STATUS "")
+	message (STATUS "Found OpenCL package")
+endif ()

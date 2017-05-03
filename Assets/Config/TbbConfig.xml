@@ -1,0 +1,31 @@
+<TBBConfig>
+
+	<Task Index="1" Type="Parallel">
+		<Asset Name="Retractor" Component="Physics" Plugin="Rigid"/>
+		<Asset Name="Kidney" Component="Physics" Plugin="CpuMsd"/>
+		<Asset Name="Bile" Component="Physics" Plugin="CpuMsd"/>
+		<SubTask Type="Serial" Component="Intersection" Plugin="Intersection">
+			<Asset Name="Scalpel"/>
+			<Asset Name="Liver"/>
+		</SubTask>
+	</Task>
+	<Task Index="2" Type="Parallel">
+		<Asset Name="Scalpel" Component="Physics" Plugin="Rigid"/>
+		<Asset Name="Liver" Component="Physics" Plugin="Xfem"/>
+	</Task>
+	<Task Index="3" Type="Serial Component="Collision" Plugin="Collision">
+		<Asset Name="Scalpel"/>
+		<Asset Name="Retractor"/>
+		<Asset Name="Liver"/>
+		<Asset Name="Kidney"/>
+		<Asset Name="Bile"/>
+	</Task>
+	<Task Index="4" Type="Parallel">
+		<Asset Name="Scalpel" Component="Render"/>
+		<Asset Name="Retractor" Component="Render"/>
+		<Asset Name="Liver" Component="Render"/>
+		<Asset Name="Kidney" Component="Render"/>
+		<Asset Name="Bile" Component="Render"/>
+	</Task>
+
+</TBBConfig>

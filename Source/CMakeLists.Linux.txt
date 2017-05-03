@@ -1,0 +1,96 @@
+# Common libraries used throughout the project
+
+### MATH LIBRARY ###
+find_library (MATH_LIB m REQUIRED)
+message (STATUS "")
+message (STATUS "Math library: " ${MATH_LIB})
+
+### DYNAMIC LOADER LIBRARY ###
+find_library (DL_LIB dl REQUIRED)
+message (STATUS "")
+message (STATUS "Dynamic Loader library: " ${DL_LIB})
+
+### POSIX THREAD LIBRARY ###
+find_library (THREAD_LIB pthread REQUIRED)
+message (STATUS "")
+message (STATUS "Thread library: " ${THREAD_LIB})
+
+### GRAPHICS LIBRARIES ###
+if (NOT GPU_PACKAGE OR GPU_PACKAGE STREQUAL "OpenGL")
+	find_library (GL_LIB GL PATHS ${GPU_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+	find_library (GL_LIB GL REQUIRED)
+	message (STATUS "")
+	message (STATUS "OpenGL library: " ${GL_LIB})
+
+	if (UNIX)
+		find_library (GLX_LIB GLX PATHS ${GPU_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+		find_library (GLX_LIB GLX REQUIRED)
+		message (STATUS "")
+		message (STATUS "GLX library: " ${GLX_LIB})
+		
+		find_library (X11_LIB X11 REQUIRED)
+		message (STATUS "")
+		message (STATUS "X11 library: " ${X11_LIB})
+	endif ()
+
+find_library (GL3W_LIB gl3w PATHS ${CMAKE_SOURCE_DIR}/Lib NO_DEFAULT_PATH)
+message (STATUS "")
+message (STATUS "GL3W library: " ${GL3W_LIB})
+	
+	set (OPENGL_LIBS ${GL_LIB} ${GLX_LIB} ${X11_LIB} ${GL3W_LIB})
+
+endif ()
+
+### GPU COMPUTE LIBRARIES ###
+if (COMPUTE_PACKAGE STREQUAL "CUDA")
+	
+	if (COMPUTE_PACKAGE_LOCATION)
+		find_library (CUDA_LIB cuda PATHS ${COMPUTE_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+		find_library (CUDART_LIB cudart PATHS ${COMPUTE_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+		find_library (CUBLAS_LIB cublas PATHS ${COMPUTE_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+		find_library (CUSPARSE_LIB cusparse PATHS ${COMPUTE_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+		find_library (CURAND_LIB curand PATHS ${COMPUTE_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+		find_library (CUFFT_LIB cufft PATHS ${COMPUTE_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+		find_library (CUFFTW_LIB cufftw PATHS ${COMPUTE_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+		find_library (CUSOLVER_LIB cusolver PATHS ${COMPUTE_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+	endif ()
+	
+	find_library (CUDA_LIB cuda REQUIRED)
+	find_library (CUDART_LIB cudart REQUIRED)
+	find_library (CUBLAS_LIB cublas REQUIRED)
+	find_library (CUSPARSE_LIB cusparse REQUIRED)
+	find_library (CURAND_LIB curand REQUIRED)
+	find_library (CUFFT_LIB cufft REQUIRED)
+	find_library (CUFFTW_LIB cufftw REQUIRED)
+	find_library (CUSOLVER_LIB cusolver REQUIRED)
+	
+	set (CUDA_LIBS ${CUDA_LIB} ${CUDART_LIB} ${CUBLAS_LIB} ${CUSPARSE_LIB}
+			${CURAND_LIB} ${CUFFT_LIB} ${CUFFTW_LIB} ${CUSOLVER_LIB})
+		
+	message (STATUS "")
+	message (STATUS "CUDA libraries: ${CUDA_LIBS}")
+	set (CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} "-O2 -gencode -Wall")
+
+elseif (COMPUTE_PACKAGE STREQUAL "OpenCL")
+
+	find_library (CL_LIBS OpenCL PATHS ${COMPUTE_PACKAGE_LOCATION} NO_DEFAULT_PATH)
+	find_library (CL_LIBS OpenCL REQUIRED)
+	message (STATUS "")
+	message (STATUS "OpenCL package: " ${CL_LIBS})
+
+endif ()
+
+### TASK SCHEDULER LIBRARY ###
+if (SCHEDULER_PACKAGE STREQUAL "IntelTBB")
+	if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+		find_library (TBB_LIB tbb_debug PATHS ${CMAKE_SOURCE_DIR}/Lib NO_DEFAULT_PATH)
+		find_library (TBBMALLOC_LIB tbbmalloc_debug PATHS ${CMAKE_SOURCE_DIR}/Lib NO_DEFAULT_PATH)
+	else ()
+		find_library (TBB_LIB tbb PATHS ${CMAKE_SOURCE_DIR}/Lib NO_DEFAULT_PATH)
+		find_library (TBBMALLOC_LIB tbbmalloc PATHS ${CMAKE_SOURCE_DIR}/Lib NO_DEFAULT_PATH)
+	endif ()
+	
+	set (TBB_LIBS ${TBB_LIB} ${TBBMALLOC_LIB})
+	message (STATUS "")
+	message (STATUS "Found Thread Building Blocks: " ${TBB_LIBS})
+endif ()

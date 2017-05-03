@@ -1,0 +1,59 @@
+<AssetConfig>
+
+	<Geometry
+		Prefix="kidney"
+		Location="/home/kishalay/Projects/Chimera/Assets/Data/Kidney/Mesh/Low2/fem/"
+		Depth="1"
+	/>
+	
+	<Render>
+	
+		<Programs Count="2">
+			<Program Type="Normal" Prefix="normal" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
+			<Program Type="Render" Id="1" Prefix="xfeSurface" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
+			<Program Type="Render" Id="2" Prefix="xfeCut" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
+		</Programs>
+		
+		<ColorTexture Width="1024" Height="512" Depth="512">
+			<AspectRatio X="1." Y="1." Z="3."/>
+			<Location>/home/kishalay/Projects/Chimera/Assets/Data/Kidney/Texture/kidney.3d.rgba</Location>
+			<TextureCoordinates>/home/kishalay/Projects/Chimera/Assets/Data/Kidney/Mesh/Low/kidney.texc</TextureCoordinates>
+		</ColorTexture>
+			
+		<Color R=".62" G=".26" B=".07"/>
+
+	</Render>
+	
+	<Physics>
+	
+		<Programs Count="1">
+			<Program Location="/home/kishalay/Projects/Chimera/Bin/CudaXFEM_xfem.cu.ptx">
+				<Function Name="conjugate_gradient"/>
+			</Program>
+		</Programs>
+		
+	</Phyiscs>
+
+	<!--
+		<Program Type="Render" Id="1" Prefix="plain" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
+		<Program Type="Render" Id="2" Prefix="plain" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
+		
+		trimesh_name="kidney"
+		trimesh_lib="libTriCollide"
+		
+		blade_owner="Rigid"
+		blade_name="scalpel"
+		
+		cut_external_vbuffer_size="256"
+		cut_external_ibuffer_size="512"
+
+		cut_internal_vbuffer_size="6000"
+		cut_internal_ibuffer_size="4000"
+
+		texture="/home/kish1/Data/Kidney/Texture/kidney.tex3.rgba"
+		textureinfo="/home/kish1/Data/Kidney/Texture/kidney.tex3.rgba.info"
+		
+		atlas_scale="4"
+		atlas_shader="/home/kish1/Projects/SF/plugins/graphics/glsl/v4/atlas"
+	-->
+</AssetConfig>

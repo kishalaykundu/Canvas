@@ -1,0 +1,20 @@
+<AssetsConfig>
+
+	<ComponentIdMap>
+	  <Map Name="Geometry" Key="31452"/>
+	  <Map Name="Render" Key="16975"/>
+	  <Map Name="Physics" Key="63824"/>
+	  <Map Name="Collision" Key="64722"/>
+	  <Map Name="Intersection" Key="19100"/>
+	</ComponentIdMap>
+
+	<Assets>
+		<Asset Name="Kidney" ID="42967" Type="Deformable_MSD" Config="Assets/Config/Kidney.msd.xml">
+			<Component Type="Geometry" LoadingPlugin="CpuMsd"/>
+			<Component Type="Render" LoadingPlugin="CpuMsd"/>
+			<Component Type="Physics" LoadingPlugin="CpuMsd"/>
+			<Component Type="Collision" LoadingPlugin="CpuCollision"/>
+		</Asset>
+	</Assets>
+		
+</AssetsConfig>

@@ -1,0 +1,23 @@
+<NameMap>
+    <Map Type="Plugin" Name="Rigid" Key="57584"/>
+    <Map Type="Plugin" Name="CpuMsd" Key="17762"/>
+    <Map Type="Plugin" Name="CudaMsd" Key="269"/>
+    <Map Type="Plugin" Name="OclMsd" Key="33938"/>
+    <Map Type="Plugin" Name="ComputeMsd" Key="14151"/>
+    <Map Type="Plugin" Name="CpuXfem" Key="53362"/>
+    <Map Type="Plugin" Name="CudaXfem" Key="49628"/>
+    <Map Type="Plugin" Name="OclXfem" Key="28821"/>
+    <Map Type="Plugin" Name="ComputeXfem" Key="44177"/>
+    <Map Type="Asset" Name="Scalpel" Key="64155"/>
+    <Map Type="Asset" Name="Retractor" Key="48651"/>
+    <Map Type="Asset" Name="Kidney" Key="42967"/>
+    <Map Type="Asset" Name="Bile" Key="7129"/>
+    <Map Type="Asset" Name="Liver" Key="62725"/>
+    <Map Type="Asset" Name="Apple" Key="5519"/>
+    <Map Type="Asset" Name="Melon" Key="8822"/>
+    <Map Type="Component" Name="Geometry" Key="31452"/>
+    <Map Type="Component" Name="Render" Key="16975"/>
+    <Map Type="Component" Name="Physics" Key="63824"/>
+    <Map Type="Component" Name="Collision" Key="64722"/>
+    <Map Type="Component" Name="Intersection" Key="19100"/>
+</NameMap>

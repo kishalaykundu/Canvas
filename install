@@ -1,0 +1,439 @@
+#! /bin/bash
+
+######### Help function - called by './install --help' #############
+
+function echo_help {
+	echo "Usage: ./install options <values>";
+	echo ""
+	echo "Argument options: ";
+	echo $'\t'"--help prints out command line options";
+	echo $'\t'"--build=<BUILD_TYPE> [Debug(default)/Release/ReleaseWithLog]"
+	echo $'\t'"--verbose (makefile verbose output)"
+	echo $'\t'"--double-precision (turns on double precision)"
+	echo $'\t'"--with-vec3 (use 3-element vector instead of 4)"
+	echo $'\t'"--gpu-package=<GPU-PACKAGE> [OpenGL(default)/Vulkan/DirectX]"
+	echo $'\t'"--gpu-include-path=<INCLUDE-PATH> (specifies non-standard GPU include path"
+	echo $'\t'"--gpu-package-location=<LOCATION> (specifies non-standard GPU library location)"
+	echo $'\t'"--compute-package=<COMPUTE-PACKAGE> [None(default)/CUDA/OpenCL/DirectCompute]"
+	echo $'\t'"--compute-include-path=<INCLUDE-PATH> (specifies non-standard Compute include path"
+	echo $'\t'"--compute-package-location=<LOCATION> (specifies non-standard Compute library location)"
+	echo $'\t'"--scheduler-package=<SCHEDULAR-PACKAGE> [None(default)/IntelTBB/Threads]"
+	echo $'\t'"--scheduler-include-path=<INCLUDE-PATH> (specifies non-standard scheduler include path"
+	echo $'\t'"--scheduler-package-location=<LOCATION> (specifies non-standard scheduler library location)"
+	echo ""
+	echo "Minimum System specifications (Check your system for successful compilation):";
+	echo "OpenGL"$'\t'": 4.5"
+	echo "GLX"$'\t'": 1.3"
+	echo "CUDA"$'\t'": 7.5"
+	exit;
+}
+
+########### TBB library locator and builder functions ###############
+
+result=1
+function check_and_make_tbb_lib () {
+	lib=$1
+	
+	# change tbbproxy to tbbmalloc_proxy (TBB's makefile oddity)
+	if [ "$2" == "tbbproxy" ];
+	then
+		lib+="tbbmalloc_proxy"
+	else
+		lib+=$2
+	fi
+	
+	# don't append anything if release candidate (TBB's makefile oddity)
+	if [ "$3" != "_release" ];
+	then
+		lib+=$3
+	fi
+	
+	lib+=$4
+	echo "Looking for library $lib"
+	
+	if [ ! -f "$lib" ];
+	then
+		result=0 # this flag tells if we should run make clean later
+		
+		echo "$(tput bold)$(tput setaf 1)Could not find $lib...Building$(tput sgr 0)"
+		cd Source/Packages/TBB/src
+		
+		# add O3 flag instead of O2 provided by TBB's makefile
+		if [ ! "$3" == "_release" ];
+		then
+#			libprefix=" CXXFLAGS=\"-O2\" "
+#			libprefix+=$2
+			libprefix=$2
+		else
+			libprefix=$2
+		fi
+		
+		libprefix+=$3
+		make "$libprefix"
+		echo "make $libprefix"
+		
+		# copy file over to Canvas's Lib directory
+		find ../ -name "libtbb*" -print0 | xargs -0 -I {} cp {} ../../../../Lib/
+		echo "find ../ -name libtbb* -print0 | xargs -0 -I {} cp {} ../../../../Lib/"
+		cd ../../../../
+		
+	else
+		echo "Found $lib"
+	fi
+}
+
+function clean_up_tbb_libs () {
+	echo "$(tput bold)$(tput setaf 1)Cleaning TBB$(tput sgr 0)"
+	cd ./Source/Packages/TBB/src
+	make clean
+	rm -rf build/*
+	cd ../../../../
+}
+
+#########           Main build happens below           ###########
+
+#########             Parse input options              ###########
+for i in "$@"
+do
+	case $i in
+	
+		## Build Type
+		--build=*)
+		build_type="${i#*=}"
+		shift
+		;;
+		
+		## Build Directory (usually automatic)
+		--build-dir=*)
+		build_dir="${i#*=}"
+		shift
+		;;
+		
+		## Float or double precision
+		--double-precision)
+		double_precision="ON"
+		shift
+		;;
+		
+		## Verbose build option
+		--verbose)
+		verbose_flag="ON"
+		shift
+		;;
+		
+		## Default vector size (3 or 4)
+		--with-vec3)
+		vec3="ON"
+		shift
+		;;
+		
+		## Graphics package option - OpenGL (default), Vulkan or DirectX
+		--gpu-package=*)
+		gpu_package="${i#*=}"
+		shift
+		;;
+		
+		## Non-standard Graphics include path
+		--gpu-include-path=*)
+		gpu_include="${i#*=}"
+		shift
+		;;
+		
+		## Non-standard Graphics library path
+		--gpu-package-location=*)
+		gpu_pkg_loc="${i#*=}"
+		shift
+		;;
+		
+		## HPC compute package option - None (default), CUDA or OpenCL
+		--compute-package=*)
+		compute_package="${i#*=}"
+		shift
+		;;
+		
+		## Non-standard HPC compute include path
+		--compute-include-path=*)
+		compute_include="${i#*=}"
+		shift
+		;;
+		
+		## Non-standard HPC compute library path
+		--compute-package-location=*)
+		compute_pkg_loc="${i#*=}"
+		shift
+		;;
+		
+		## Task scheduler package option - None (default), IntelTBB or Threads
+		--scheduler-package=*)
+		scheduler_package="${i#*=}"
+		shift
+		;;
+		
+		## Non-standard scheduler package include path
+		--scheduler-include-path=*)
+		scheduler_include="${i#*=}"
+		shift
+		;;
+		
+		## Non-standard scheduler package library path
+		--scheduler-package-location=*)
+		scheduler_pkg_loc="${i#*=}"
+		shift
+		;;
+		
+		## Print help
+		--help)
+		echo_help
+		;;
+		
+		## Illegal option
+		*)
+		echo "Bash script: unrecognized argument '$i'...Aborting"
+		echo_help
+		;;
+		
+	esac
+done
+
+echo ""
+echo "For help on command line arguments, type './install --help'"
+echo ""
+
+
+
+######### Create CMake flags to be passed from options above ###########
+
+# Check build type
+if [ "$build_type" != "" ];
+then
+	cmake_flags="-DCMAKE_BUILD_TYPE=$build_type"
+else
+	cmake_flags=""
+fi
+
+# Optionally create build directory
+if [ "$build_dir" == "" ];
+then
+	if [ "$build_type" == "" ];
+	then
+		build_dir="Debug"
+	else
+		build_dir="$build_type"
+	fi
+fi
+
+if [ ! -d ./Build/$build_dir ];
+then
+	echo "Creating build directory Build/$build_dir"
+	mkdir -p ./Build/$build_dir
+fi
+
+# Check and populate cmake options
+if [ "$verbose_flag" != "" ];
+then
+	cmake_flags+=" -DCMAKE_VERBOSE_MAKEFILE=ON"
+fi
+
+if [ "$double_precision" != "" ];
+then
+	cmake_flags+=" -DDOUBLE_PRECISION=$double_precision"
+fi
+
+if [ "$vec3" != "" ];
+then
+	cmake_flags+=" -DVECTOR3_ENABLED=$vec3"
+fi
+
+if [ "$gpu_package" == "" ];
+then
+	gpu_package="OpenGL"
+fi
+cmake_flags+=" -DGPU_PACKAGE=$gpu_package"
+
+if [ "$gpu_include" != "" ];
+then
+	cmake_flags+=" -DGPU_INCLUDE_PATH=$gpu_include"
+fi
+
+if [ "$gpu_pkg_loc" != "" ];
+then
+	cmake_flags+=" -DGPU_PACKAGE_LOCATION=$gpu_pkg_loc"
+fi
+
+if [ "$compute_package" != "" ];
+then
+	cmake_flags+=" -DCOMPUTE_PACKAGE=$compute_package"
+fi
+
+if [ "$compute_include" != "" ];
+then
+	cmake_flags+=" -DCOMPUTE_INCLUDE_PATH=$compute_include"
+fi
+
+if [ "$compute_package_location" != "" ];
+then
+	cmake_flags+=" -DCOMPUTE_PACKAGE_LOCATION=$compute_pkg_loc"
+fi
+
+if [ "$scheduler_package" != "" ];
+then
+	cmake_flags+=" -DSCHEDULER_PACKAGE=$scheduler_package"
+fi
+
+if [ "$scheduler_include" != "" ];
+then
+	cmake_flags+=" -DSCHEDULER_INCLUDE_PATH=$scheduler_include"
+fi
+
+if [ "$scheduler_package_location" != "" ];
+then
+	cmake_flags+=" -DSCHEDULER_PACKAGE_LOCATION=$scheduler_pkg_loc"
+fi
+
+
+#########       Optionally build Bin and Lib folders      #############
+#########          Only used for fresh installs           #############
+
+if [ ! -d ./Bin ];
+then
+	echo "Creating Bin directory"
+	mkdir -p ./Bin
+fi
+
+if [ ! -d ./Lib ];
+then
+	echo "Creating Bin directory"
+	mkdir -p ./Lib
+fi
+
+#########             Check/Build TBB Libraries           #############
+
+prefix="Lib/lib" # default set for Linux/MacOSX
+
+case "$(uname -s)" in
+	
+	Darwin)
+	echo "Platform: Mac OS X"
+	suffix=".dylib"
+	;;
+	
+	CYGWIN*|MINGW32*|MSYS*)
+  echo "Platform: MS Windows (script not set up yet)"
+	prefix="Lib\\"
+	suffix=".dll"
+  exit
+  ;;
+	
+	Linux)
+	echo "Platform: Linux"
+	suffix=".so"
+	;;
+  
+  *)
+  echo "Unrecognized OS....Aborting"
+  exit
+  ;;
+esac
+
+if [ "$scheduler_package" == "IntelTBB" ];
+then
+	if [ "$build_type" == "Release" -o "$build_type" == "ReleaseWithLog" ];
+	then
+		libtype="_release"
+	else
+		libtype="_debug"
+	fi
+	
+	check_and_make_tbb_lib $prefix "tbbproxy" $libtype $suffix
+	check_and_make_tbb_lib $prefix "tbbmalloc" $libtype $suffix
+	check_and_make_tbb_lib $prefix "tbb" $libtype $suffix
+	
+	if [[ $result -eq 0 ]];
+	then
+		clean_up_tbb_libs
+	fi
+fi
+
+#########        Check/Build GL3W Library          #############
+
+lib=$prefix
+lib+="gl3w"
+lib+=$suffix
+
+if [ ! -f "$lib" ];
+then
+	echo "$(tput bold)$(tput setaf 1)Could not find $lib....Building$(tput sgr 0)"
+	cd ./Source/Packages/GL3W/
+	gl3wflag="-DOPENGL_INCLUDE_DIR=$gpu_include"
+
+	cmake $gl3wflag .
+	make
+	gcc -O2 -I./include -I$gpu_include -c -fPIC -o gl3w.o src/gl3w.c
+	gcc -O2 -shared -fPIC -o libgl3w.so gl3w.o -lc
+	mv libgl3w.so ../../../Lib/
+	cp ./include/GL/*.h ../../Common/GL/
+	rm -f gl3w.o
+	cd ../../../
+fi
+
+#########        Check/Build TinyXML2 Library          #############
+
+lib=$prefix
+lib+="tinyxml2"
+lib+=$suffix
+
+if [ ! -f "$lib" ];
+then
+	echo "$(tput bold)$(tput setaf 1)Could not find $lib....Building$(tput sgr 0)"
+	cd ./Source/Packages/TinyXML/
+	gcc -O2 -c -fPIC -o tinyxml2.o tinyxml2.cpp
+	gcc -O2 -shared -fPIC -o libtinyxml2.so tinyxml2.o -lc
+	mv libtinyxml2.so ../../../Lib/
+	rm -f tinyxml2.o
+	cd ../../../
+fi
+
+##########        Check/Build LodePNG Library          #############
+
+lib=$prefix
+lib+="lodepng"
+lib+=$suffix
+
+if [ ! -f "$lib" ];
+then
+	echo "$(tput bold)$(tput setaf 1)Could not find $lib....Building$(tput sgr 0)"
+	cd ./Source/Packages/LodePNG/
+	gcc -O2 -c -fPIC -o lodepng.o lodepng.cpp
+	gcc -O2 -shared -fPIC -o liblodepng.so lodepng.o -lc
+	mv liblodepng.so ../../../Lib/
+	rm -f lodepng.o
+	cd ../../../
+fi
+
+##########        Check/Build TinyTIFF Library         #############
+
+lib=$prefix
+lib+="tinytiff"
+lib+=$suffix
+
+if [ ! -f "$lib" ];
+then
+	echo "$(tput bold)$(tput setaf 1)Could not find $lib....Building$(tput sgr 0)"
+	cd Source/Packages/TinyTIFF/
+	gcc -O2 -c -fPIC -o tinytiffreader.o tinytiffreader.cpp
+	gcc -O2 -c -fPIC -o tinytiffwriter.o tinytiffwriter.cpp
+	gcc -O2 -shared -fPIC -o libtinytiff.so tinytiffreader.o tinytiffwriter.o -lc
+	mv libtinytiff.so ../../../Lib/
+	rm -f libtinytiff*.o
+	cd ../../../
+fi
+
+#########         Run CMake and Build Package          #############
+
+# Go to Build directory and run cmake
+cd ./Build/$build_dir
+echo ""
+echo "cmake $cmake_flags"
+echo ""
+cmake $cmake_flags ../..
+make install
