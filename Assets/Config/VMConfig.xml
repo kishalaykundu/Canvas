@@ -1,6 +1,6 @@
 <VMConfig>
 	
-	<Data Location="Assets/Data/VoxelMan/InnerOrgans"/>
+	<Data Location="Assets/Data/VoxelMan/InnerOrgans/"/>
 	
 	<RGB Location="pngrgb" Prefix="rgb"/>
 	<CT Location="pngCT" Prefix="frozenCT"/>
@@ -11,27 +11,27 @@
 	
 	<Segments Count="4">
 		
-		<Data Name="GallBladder" Output="Assets/Data/GallBladder/">
+		<Data Name="GallBladder" Output="Assets/Data/GallBladder/Textures/">
 			<Labels Count="1">
 				<Item>1002</Item>
 			</Labels>
 		</Data>
 		
-		<Data Name="LeftKidney" Output="Assets/Data/LeftKidney/">
+		<Data Name="LeftKidney" Output="Assets/Data/LeftKidney/Textures/">
 			<Labels Count="2">
 				<Item>1531</Item>
 				<Item>1532</Item>
 			</Labels>
 		</Data>
 		
-		<Data Name="RightKidney" Output="Assets/Data/RightKidney/">
+		<Data Name="RightKidney" Output="Assets/Data/RightKidney/Textures/">
 			<Labels Count="2">
 				<Item>1534</Item>
 				<Item>1536</Item>
 			</Labels>
 		</Data>
 		
-		<Data Name="Liver" Output="Assets/Data/Liver/">
+		<Data Name="Liver" Output="Assets/Data/Liver/Textures/">
 			<Labels Count="14">
 				<Item>3001</Item>
 				<Item>3002</Item>

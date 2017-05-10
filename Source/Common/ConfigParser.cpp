@@ -22,7 +22,7 @@ namespace Sim {
 	{
 		XMLError result = _doc.LoadFile (config);
 		if (result != XML_SUCCESS){
-			LOG_ERROR ("Could not open " << config);
+			LOG_ERROR ("Could not open " << config << " - either file does not exist or error while parsing file");
 			return false;
 		}
 

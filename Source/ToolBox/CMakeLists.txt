@@ -1,5 +1,6 @@
 # Add all the folders for the toolbox/utilities system
 
+add_subdirectory (EnumTypes)
 add_subdirectory (IdGenerator)
 add_subdirectory (ProcessVM)
 add_subdirectory (SystemTest)
