@@ -13,32 +13,30 @@
 #include <memory>
 
 #include "Callback.h"
-#include "Manager.h"
+#include "CircularQueue.h"
 #include "Events/Event.h"
 
 namespace Sim {
 
-	class CircularQueue;
-
 	typedef util::Callback <void (unsigned int)> EventListener;
 
-	class EventManager : public Manager {
+	class EventManager {
 
 		private:
 			unsigned int _index = 0;
-			std::unique_ptr <CircularQueue> _queue;
+			CircularQueue <Event, 64> _queue;
 			std::map <unsigned int, EventListener> _listeners;
 
 		public:
-			EventManager ();
+			EventManager () = default;
 			~EventManager ();
 
 			EventManager (const EventManager&) = delete;
 			EventManager& operator = (const EventManager&) = delete;
 
-			virtual bool Initialize (const char* config);
-			virtual void Run ();
-			virtual void Cleanup ();
+			bool Initialize (const char* config);
+			void Run ();
+			void Cleanup ();
 
 			bool AddListener (const EventListener&, EventType, unsigned int);
 			bool RemoveListener (const EventListener&, EventType, unsigned int);

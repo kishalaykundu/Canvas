@@ -16,39 +16,69 @@
 #include <map>
 #include <memory>
 
-namespace Sim {
+#include "Log.h"
+#include "Types.h"
 
-	class Manager;
-	class Plugin;
-	class Asset;
+#include "Events/EventManager.h"
+
+#include "Plugins/PluginManager.h"
+#include "Plugins/Plugin.h"
+
+#include "Assets/AssetManager.h"
+#include "Assets/Asset.h"
+
+
+namespace Sim {
 
 	class Driver {
 
 	protected:
 		bool _runFlag = false;
-		Driver* _instance = nullptr;
-		std::map <unsigned int, std::unique_ptr <Manager> > _managers;
+		static Driver* _instance;
+
+		std::unique_ptr <EventManager> _eventManager;
+		std::unique_ptr <PluginManager> _pluginManager;
+		std::unique_ptr <AssetManager> _assetManager;
 
 		Driver () = default;
 		Driver (const Driver&) = delete;
 		Driver& operator = (const Driver&) = delete;
 
 	public:
-		~Driver () = default;
-
 		static Driver& Instance () {return *_instance;}
 
-		bool AddManager (unsigned int id, std::unique_ptr <Manager> manager);
-		bool AddPlugin (unsigned int id, std::unique_ptr <Plugin> plugin);
-		bool AddAsset (unsigned int id, std::shared_ptr <Asset> asset);
+		virtual ~Driver () = default;
 
-		Manager* GetManager (unsigned int id);
-		Plugin* GetPlugin (unsigned int id);
-		Asset* GetAsset (unsigned int id);
+		virtual bool Initialize (const char* configfile) = 0;
+		virtual void Run () = 0;
+		virtual void Cleanup () = 0;
 
-		bool Initialize (const char* configfile);
-		void Run ();
-		void Cleanup ();
-		void Quit ();
+		void Quit () {_runFlag = false;}
+
+		bool AddPlugin (PluginType id, std::unique_ptr <Plugin>& plugin)
+		{
+			std::unique_ptr <Plugin> p (std::move (plugin));
+			return _pluginManager->Add (id, p);
+		}
+
+		bool AddAsset (AssetId id, std::shared_ptr <Asset> asset)
+		{
+			return _assetManager->Add (id, asset);
+		}
+
+		Plugin* GetPlugin (PluginType id)
+		{
+			return _pluginManager->Get (id);
+		}
+
+		std::shared_ptr <Asset> GetAsset (AssetId id)
+		{
+			return _assetManager->Get (id);
+		}
+
+	protected:
+		virtual bool InitializeEventManager (const char* config);
+		virtual bool InitializePluginManager (const char* config);
+		virtual bool InitializeAssetManager (const char* config);
 	};
 }

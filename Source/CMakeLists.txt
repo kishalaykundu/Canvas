@@ -90,7 +90,7 @@ endif ()
 
 add_subdirectory (TestKitchen)
 add_subdirectory (ToolBox)
-# add_subdirectory (Drivers)
+add_subdirectory (Apps)
 # add_subdirectory (Plugins)
 
 ######### Set up Config.h.in to define variables in Config.h #########

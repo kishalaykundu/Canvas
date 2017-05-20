@@ -40,7 +40,7 @@
 		<Type>ComputeXfem</Type>
 	</EnumType>
 	
-	<EnumType Name="AssetType">
+	<EnumType Name="AssetId">
 		<Type>LeftKidney</Type>
 		<Type>RightKidney</Type>
 		<Type>GallBladder</Type>
@@ -52,7 +52,13 @@
 		<Type>Cube</Type>
 	</EnumType>
 	
-	<EnumType Name="ComponentType">
+	<EnumType Name="AssetType">
+		<Type>Rigid</Type>
+		<Type>Deformable_XFEM</Type>
+		<Type>Deformable_MSD</Type>
+	</EnumType>
+	
+	<EnumType Name="AssetComponentType">
 		<Type>Geometry</Type>
 		<Type>Graphics</Type>
 		<Type>Physics</Type>

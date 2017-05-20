@@ -1,20 +1,10 @@
 <PluginsConfig>
-
-	<PluginIdMap>
-	  <Map Name="Rigid" Key="57584"/>
-	  <Map Name="CpuMsd" Key="17762"/>
-	  <Map Name="CuglMsd" Key="269"/>
-	  <Map Name="OclMsd" Key="33938"/>
-	  <Map Name="ComputeMsd" Key="14151"/>
-	  <Map Name="CpuXfem" Key="53362"/>
-	  <Map Name="CudaXfem" Key="49628"/>
-	  <Map Name="OclXfem" Key="28821"/>
-	  <Map Name="ComputeXfem" Key="44177"/>
-	</PluginIdMap>
 	
 	<Plugins Count="1">
+	
 		<Plugin Name="CuglMsd" Location="Lib/" />
 		<!--Plugin Name="Rigid" Location="Lib/" /-->
+		
 	</Plugins>
 		
 </PluginsConfig>

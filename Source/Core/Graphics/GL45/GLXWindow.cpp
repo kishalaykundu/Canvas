@@ -252,8 +252,7 @@ namespace Sim {
 	bool GLXWindow::NewContext (Display*& display, GLXContext& context)
 	{
 		display = _display;
-		context = glXCreateContextAttribsARB (display, _config, _context, true, _contextAttributes);
-		LOG_GL_ERROR ();
+		context = glXCreateContextAttribsARB (display, _config, _context, true, _contextAttributes); LOG_GL_ERROR ();
 
 		if (!context){
 			LOG_ERROR ("Could not create new GLX context");

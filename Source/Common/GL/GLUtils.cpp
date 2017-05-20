@@ -8,6 +8,7 @@
  * See GLUtils.h.
  */
 
+#include <cstring>
 #	include <iostream>
 #include "GL/GLUtils.h"
 

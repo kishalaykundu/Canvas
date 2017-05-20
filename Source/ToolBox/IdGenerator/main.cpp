@@ -46,6 +46,9 @@ int main (int argc, char** argv)
 	}
 
 	tinyxml2::XMLError error = doc.SaveFile ("Assets/Config/MapId.xml");
+	if (error != tinyxml2::XML_SUCCESS){
+		cerr << "Could not save result to MapId.xml" << endl;
+	}
 
 	exit (EXIT_SUCCESS);
 }
