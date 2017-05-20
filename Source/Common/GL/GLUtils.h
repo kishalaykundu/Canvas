@@ -46,7 +46,13 @@ extern "C" {
 #define SIM_GLX_MIN_MINOR_VERSION 4
 
 #if defined (__linux__) || defined (__APPLE__) || defined (MACOSX)
-	typedef GLXContext GPU_CONTEXT;
+	typedef GLXContext GPUContext;
+#endif
+
+#ifdef SIM_DOUBLE_PRECISION
+	typedef GLdouble GLreal;
+#else
+	typedef GLfloat GLreal;
 #endif
 
 #if defined(GL_DEBUG_TYPE_ERROR) && defined(GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR) && \

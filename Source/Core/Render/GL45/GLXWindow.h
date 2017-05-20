@@ -11,11 +11,11 @@
 #pragma once
 
 #include "GL/GLUtils.h"
-#include "Graphics/GL45/GLWindow.h"
+#include "Render/Window.h"
 
 namespace Sim {
 
-	class GLXWindow : public GLWindow {
+	class GLXWindow : public Window {
 
 	protected:
 		// X-Window Attributes
@@ -35,17 +35,18 @@ namespace Sim {
 		GLXWindow (const GLXWindow&) = delete;
 		GLXWindow& operator = (const GLXWindow&) = delete;
 
-		GLXWindow (unsigned int width, unsigned int height, unsigned int colorDepth);
+		GLXWindow::GLXWindow (unsigned int w, unsigned int h, unsigned int c)
+		: _width (w), _height (h), _colorDepth (c) {}
 
-		virtual bool Initialize (const char* config) override;
-		virtual void Update () override;
-		virtual void Cleanup () override;
+		bool Initialize () override;
+		void Update () override;
+		void Cleanup () override;
 
-		virtual void Resize (unsigned int width, unsigned int height) override;
-		virtual void SwapBuffers () override;
+		void Resize (unsigned int width, unsigned int height) override;
+		void SwapBuffers () override;
 
-		virtual void MakeContextCurrent () override;
-		virtual void ReleaseContext () override;
+		void MakeContextCurrent () override;
+		void ReleaseContext () override;
 
 		bool NewContext (Display*& display, GLXContext& newContext);
 	};

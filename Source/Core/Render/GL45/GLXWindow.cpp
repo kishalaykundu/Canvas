@@ -9,14 +9,11 @@
  */
 
 #include "Log.h"
-#include "Graphics/GL45/GLXWindow.h"
+#include "Render/GL45/GLXWindow.h"
 
 namespace Sim {
 
-	GLXWindow::GLXWindow (unsigned int w, unsigned int h, unsigned int c)
-	: _width (w), _height (h), _colorDepth (c) {}
-
-	bool GLXWindow::Initialize (const char* config)
+	bool GLXWindow::Initialize ()
 	{
 		_display = XOpenDisplay (NULL);
 		if (!_display){

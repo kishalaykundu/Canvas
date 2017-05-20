@@ -11,13 +11,13 @@
 		<Type>AssetManager</Type>
 	</EnumType>
 	
-	<EnumType Name="GpuManagerType">
+	<EnumType Name="RenderManagerType">
 		<Type>OglManager</Type>
 		<Type>VkManager</Type>
 		<Type>DxManager</Type>
 	</EnumType>
 	
-	<EnumType Name="HpcManagerType">
+	<EnumType Name="ComputeManagerType">
 		<Type>CudaManager</Type>
 		<Type>OclManager</Type>
 		<Type>CpuManager</Type>
