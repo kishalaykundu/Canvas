@@ -9,7 +9,9 @@
  */
 
 #include "Log.h"
+#include "GL/GLUtils.h"
 #include "Render/GL45/GLXWindow.h"
+#include "Driver/Driver.h"
 
 namespace Sim {
 
@@ -134,6 +136,8 @@ namespace Sim {
 	  }
 
 	  MakeContextCurrent ();
+
+	  // GL3W IS INITIALIZED HERE AFTER RENDERING CONTEXT HAS BEEN MADE CURRENT
 	  if (gl3wInit ()){
 	  	LOG_ERROR ("GL3W and OpenGL could not be initialized");
 	  	return false;

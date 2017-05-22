@@ -17,8 +17,8 @@
 #include "Log.h"
 
 #include "ConfigParser.h"
-#include "Assets/Asset.h"
-#include "Assets/AssetManager.h"
+#include "Asset/Asset.h"
+#include "Asset/AssetManager.h"
 
 using std::map;
 using std::shared_ptr;

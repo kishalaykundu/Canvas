@@ -55,7 +55,7 @@ namespace Sim {
 			{
 #				ifndef NDEBUG
 				if (index > size){
-					LOG_ERROR ("Illegal index accessed: " << index);
+					LOG_ERROR ("Illegal vector index accessed: " << index);
 					return _v [size - 1];
 				}
 #				endif
@@ -65,7 +65,7 @@ namespace Sim {
 			{
 #				ifndef NDEBUG
 				if (index > size){
-					LOG_ERROR ("Illegal index accessed: " << index);
+					LOG_ERROR ("Illegal vector index accessed: " << index);
 					return 0.;
 				}
 #				endif

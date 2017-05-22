@@ -26,7 +26,11 @@ namespace Sim {
 		int _colorDepth = SIM_DEFAULT_PIXEL_COLOR_DEPTH;
 
 	public:
-		virtual ~Window ();
+		Window (unsigned int w, unsigned int h, int c)
+		: _width (w), _height (h), _colorDepth (c) {}
+
+		Window () = delete;
+		virtual ~Window () = default;
 
 		virtual bool Initialize () = 0;
 		virtual void Update () = 0;

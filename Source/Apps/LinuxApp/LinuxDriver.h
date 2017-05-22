@@ -8,7 +8,6 @@
  * Linux specific driver derived from the Driver class.
  */
 
-#include "Plugins/Plugin.h"
 #include "Driver/Driver.h"
 
 namespace Sim {
@@ -28,5 +27,10 @@ namespace Sim {
 		bool Initialize (const char* config) override;
 		void Run () override;
 		void Cleanup () override;
+
+	protected:
+		bool InitializeRenderManager (const char* config);
+		bool InitializeComputeManager (const char* config);
+		bool InitializeTaskManager (const char* config);
 	};
 }

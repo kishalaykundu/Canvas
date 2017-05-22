@@ -4,28 +4,29 @@
 	
 	<EnumType Name="ManagerType">
 		<Type>EventManager</Type>
-		<Type>GpuManager</Type>
-		<Type>HpcManager</Type>
+		<Type>RenderManager</Type>
+		<Type>ComputeManager</Type>
 		<Type>TaskManager</Type>
 		<Type>PluginManager</Type>
 		<Type>AssetManager</Type>
 	</EnumType>
 	
 	<EnumType Name="RenderManagerType">
-		<Type>OglManager</Type>
-		<Type>VkManager</Type>
-		<Type>DxManager</Type>
+		<Type>GLManager</Type>
+		<Type>VKManager</Type>
+		<Type>DXManager</Type>
 	</EnumType>
 	
 	<EnumType Name="ComputeManagerType">
 		<Type>CudaManager</Type>
-		<Type>OclManager</Type>
-		<Type>CpuManager</Type>
+		<Type>CLManager</Type>
+		<Type>ComputeManager</Type>
 	</EnumType>
 	
 	<EnumType Name="TaskManagerType">
 		<Type>TbbManager</Type>
 		<Type>ThreadManager</Type>
+		<Type>TaskManager</Type>
 	</EnumType>
 	
 	<EnumType Name="PluginType">
@@ -60,7 +61,7 @@
 	
 	<EnumType Name="AssetComponentType">
 		<Type>Geometry</Type>
-		<Type>Graphics</Type>
+		<Type>Render</Type>
 		<Type>Physics</Type>
 		<Type>Collision</Type>
 		<Type>Intersection</Type>

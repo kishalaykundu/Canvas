@@ -12,7 +12,6 @@
  */
 #pragma once
 
-#include <memory>
 #include "tinyxml2.h"
 
 #include "Preprocess.h"
@@ -37,8 +36,8 @@ namespace Sim {
 			virtual void Cleanup () = 0;
 	};
 
-	typedef void (*NewPlugin)(Sim::PluginType);
+	typedef void (*NewPlugin)(PluginType);
 
 	// interface for constructor from dynamically loaded libraries.
-	extern "C" EXPORT void StartPlugin (Sim::PluginType);
+	extern "C" EXPORT void StartPlugin (PluginType);
 }

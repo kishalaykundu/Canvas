@@ -78,5 +78,5 @@ extern "C" {
 #	endif
 
 #else
-#	define LOG_GL_ERROR ()
+#	define LOG_GL_ERROR()
 #endif

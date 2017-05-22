@@ -20,7 +20,7 @@
 #include "Preprocess.h"
 #include "Log.h"
 #include "Types.h"
-#include "Assets/Component.h"
+#include "Asset/Component.h"
 
 namespace Sim {
 

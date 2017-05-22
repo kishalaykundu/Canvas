@@ -12,7 +12,7 @@
  */
 #pragma once
 
-#include "Assets/Asset.h"
+#include "Asset/Asset.h"
 
 namespace Sim {
 

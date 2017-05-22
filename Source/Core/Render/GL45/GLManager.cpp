@@ -22,6 +22,8 @@
 #include "Render/GL45/GLManager.h"
 
 using std::make_shared;
+using std::make_unique;
+using std::static_pointer_cast;
 using tinyxml2::XMLElement;
 using tinyxml2::XMLError;
 using tinyxml2::XML_SUCCESS;
@@ -37,6 +39,7 @@ namespace Sim {
 			return false;
 		}
 
+		// The window must always be initialized first
 		XMLElement* element = parser.GetElement ("Window");
 		if (element == nullptr){
 			LOG_ERROR ("No display window profile specified in " << config);
@@ -84,12 +87,17 @@ namespace Sim {
 	void GLManager::Update ()
 	{
 		// clear from previous frame
-		glClearColor (_background [0], _background [1], _background [2], 0.);
+		glClearBufferfv (GL_COLOR, 0, _background);
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void GLManager::Cleanup ()
 	{
+	}
+
+	bool GLManager::MakeNewContext (Display*& display, GLXContext& newContext)
+	{
+		return static_cast <GLXWindow*> (_window.get ())->NewContext (display, newContext);
 	}
 
 	void GLManager::Mouse (unsigned int b, int x, int y)
@@ -138,7 +146,7 @@ namespace Sim {
 			}
 		}
 
-		_window = make_unique <GLXWindow> (GLXWindow (width, height, colorDepth));
+		_window = make_unique <GLXWindow> (width, height, colorDepth);
 
 		return _window->Initialize ();
 	}
@@ -202,12 +210,12 @@ namespace Sim {
 			LOG_ERROR ("Directional Lights specified but no \'Light\' element retrieved");
 			return false;
 		}
-		_directionalLights = make_shared <DirectionalLight> (new DirectionalLight [count], DELETE_ARRAY <DirectionalLight> ());
+		_directionalLights = make_unique <GLManager::DirectionalLight []> (count);
 
 		unsigned int i = 0;
 		while (lelem != nullptr && i < count){
 
-			DirectionalLight light;
+			GLManager::DirectionalLight light;
 			XMLElement* celem = lelem->FirstChildElement ("Direction");
 			if (celem != nullptr){
 				Real x = 0., y = 0., z = 0;

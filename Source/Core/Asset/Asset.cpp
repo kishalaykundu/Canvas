@@ -19,8 +19,8 @@
 #include "ConfigParser.h"
 #include "Driver/Driver.h"
 
-#include "Assets/Asset.h"
-#include "Assets/Component.h"
+#include "Asset/Asset.h"
+#include "Asset/Component.h"
 
 using std::string;
 using std::shared_ptr;

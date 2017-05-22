@@ -19,9 +19,9 @@
 #include "Log.h"
 #include "ConfigParser.h"
 
-#include "Plugins/Plugin.h"
-#include "Plugins/SharedLib.h"
-#include "Plugins/PluginManager.h"
+#include "Plugin/Plugin.h"
+#include "Plugin/SharedLib.h"
+#include "Plugin/PluginManager.h"
 
 using std::ostringstream;
 using std::move;
@@ -128,7 +128,7 @@ namespace Sim {
 #		ifndef NDEBUG
 		auto p = _plugins.find (id);
 		if (p != _plugins.end ()){
-			return p.second->get ();
+			return p->second.get ();
 		}
 
 		LOG_WARNING ("Could not find " << id << " plugin");

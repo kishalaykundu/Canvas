@@ -46,12 +46,12 @@ set (APP_SRCS ${APP_SRCS}
 	${SIM_SOURCE_DIR}/Common/ConfigParser.cpp)
 
 # Add core source files
-file (GLOB ASSETS_DIR_SRCS "${SIM_CORE_DIR}/Assets/*.cpp")
+file (GLOB ASSETS_DIR_SRCS "${SIM_CORE_DIR}/Asset/*.cpp")
 file (GLOB DRIVER_DIR_SRCS "${SIM_CORE_DIR}/Driver/*.cpp")
-file (GLOB GRAPHICS_DIR_SRCS "${SIM_CORE_DIR}/Graphics/*.cpp")
+file (GLOB GRAPHICS_DIR_SRCS "${SIM_CORE_DIR}/Render/*.cpp")
 file (GLOB EVENTS_DIR_SRCS "${SIM_CORE_DIR}/Events/*.cpp")
-file (GLOB HPC_DIR_SRCS "${SIM_CORE_DIR}/HPC/*.cpp")
-file (GLOB PLUGINS_DIR_SRCS "${SIM_CORE_DIR}/Plugins/*.cpp")
+file (GLOB HPC_DIR_SRCS "${SIM_CORE_DIR}/Compute/*.cpp")
+file (GLOB PLUGINS_DIR_SRCS "${SIM_CORE_DIR}/Plugin/*.cpp")
 file (GLOB TASKS_DIR_SRCS "${SIM_CORE_DIR}/Tasks/*.cpp")
 
 set (APP_SRCS ${APP_SRCS}
@@ -65,25 +65,33 @@ set (APP_SRCS ${APP_SRCS}
 
 # Add application specific source files
 if (NOT GPU_PACKAGE OR GPU_PACKAGE STREQUAL "OpenGL")
-	file (GLOB GL45_DIR_SRCS "${SIM_CORE_DIR}/Display/GL45/*.cpp")
+	file (GLOB GL45_DIR_SRCS "${SIM_CORE_DIR}/Render/GL45/*.cpp")
 	set (APP_SRCS ${APP_SRCS} ${GL45_DIR_SRCS})
+	
+elseif (GPU_PACKAGE STREQUAL "Vulkan")
+	file (GLOB VK_DIR_SRCS "${SIM_CORE_DIR}/Render/VK/*.cpp")
+	set (APP_SRCS ${APP_SRCS} ${VK_DIR_SRCS})
+
 endif ()
 
 
 if (COMPUTE_PACKAGE STREQUAL "CUDA")
-	file (GLOB CUDA_DIR_SRCS "${SIM_CORE_DIR}/HPC/Cuda/*.cpp")
+	file (GLOB CUDA_DIR_SRCS "${SIM_CORE_DIR}/Compute/Cuda/*.cpp")
 	set (APP_SRCS ${APP_SRCS} ${CUDA_DIR_SRCS})
-endif ()
-
-
-if (COMPUTE_PACKAGE STREQUAL "CL")
-	file (GLOB CUDA_DIR_SRCS "${SIM_CORE_DIR}/HPC/CL/*.cpp")
+	
+elseif (COMPUTE_PACKAGE STREQUAL "CL")
+	file (GLOB CUDA_DIR_SRCS "${SIM_CORE_DIR}/Compute/CL/*.cpp")
 	set (APP_SRCS ${APP_SRCS} ${CL_DIR_SRCS})
+	
 endif ()
 
 if (SCHEDULER_PACKAGE STREQUAL "IntelTBB")
 	file (GLOB TBB_DIR_SRCS "${SIM_CORE_DIR}/Tasks/TBB/*.cpp")
 	set (APP_SRCS ${APP_SRCS} ${TBB_DIR_SRCS})
+	
+elseif (SCHEDULER_PACKAGE STREQUAL "Threads")
+	file (GLOB THREAD_DIR_SRCS "${SIM_CORE_DIR}/Tasks/Threads/*.cpp")
+	set (APP_SRCS ${APP_SRCS} ${THREAD_DIR_SRCS})
 endif ()
 
 file (GLOB APP_DIR_SRCS "${SIM_SOURCE_DIR}/Apps/LinuxApp/*.cpp")

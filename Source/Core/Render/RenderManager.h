@@ -21,6 +21,7 @@ namespace Sim {
 		std::unique_ptr <Window> _window;
 
 	public:
+		RenderManager () = default;
 		virtual ~RenderManager () = default;
 
 		RenderManager (const RenderManager&) = delete;

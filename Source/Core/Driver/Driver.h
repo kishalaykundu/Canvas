@@ -20,13 +20,16 @@
 #include "Types.h"
 
 #include "Events/EventManager.h"
+#include "Render/RenderManager.h"
+#include "Compute/ComputeManager.h"
 
-#include "Plugins/PluginManager.h"
-#include "Plugins/Plugin.h"
+#include "Plugin/PluginManager.h"
+#include "Plugin/Plugin.h"
 
-#include "Assets/AssetManager.h"
-#include "Assets/Asset.h"
+#include "Asset/AssetManager.h"
+#include "Asset/Asset.h"
 
+#include "Tasks/TaskManager.h"
 
 namespace Sim {
 
@@ -37,8 +40,11 @@ namespace Sim {
 		static Driver* _instance;
 
 		std::unique_ptr <EventManager> _eventManager;
+		std::unique_ptr <RenderManager> _renderManager;
+		std::unique_ptr <ComputeManager> _computeManager;
 		std::unique_ptr <PluginManager> _pluginManager;
 		std::unique_ptr <AssetManager> _assetManager;
+		std::unique_ptr <TaskManager> _taskManager;
 
 		Driver () = default;
 		Driver (const Driver&) = delete;
@@ -54,6 +60,8 @@ namespace Sim {
 		virtual void Cleanup () = 0;
 
 		void Quit () {_runFlag = false;}
+
+		RenderManager& GetRenderManager () {return *(_renderManager.get ());}
 
 		bool AddPlugin (PluginType id, std::unique_ptr <Plugin>& plugin)
 		{

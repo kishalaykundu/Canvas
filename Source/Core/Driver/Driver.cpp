@@ -11,7 +11,7 @@
 #include <memory>
 
 #include "Log.h"
-#include "Plugins/SharedLib.h"
+#include "Plugin/SharedLib.h"
 #include "Driver/Driver.h"
 
 using std::make_unique;

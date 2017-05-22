@@ -19,9 +19,9 @@ namespace Sim {
 
 	protected:
 		// X-Window Attributes
-		::Window _window;
+		::Window _window = 0;
 		::Display *_display = nullptr;
-		::GLXFBConfig _config;
+		::GLXFBConfig _config = nullptr;
 		::GLXContext _context = 0;
 		int* _contextAttributes = nullptr;
 
@@ -35,8 +35,7 @@ namespace Sim {
 		GLXWindow (const GLXWindow&) = delete;
 		GLXWindow& operator = (const GLXWindow&) = delete;
 
-		GLXWindow::GLXWindow (unsigned int w, unsigned int h, unsigned int c)
-		: _width (w), _height (h), _colorDepth (c) {}
+		GLXWindow (unsigned int w, unsigned int h, int c) : Window (w, h, c) {}
 
 		bool Initialize () override;
 		void Update () override;
