@@ -8,10 +8,24 @@
 	
 	<Render>
 	
-		<Programs Count="2">
-			<Program Type="Normal" Prefix="normal" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
-			<Program Type="Render" Id="1" Prefix="xfeSurface" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
-			<Program Type="Render" Id="2" Prefix="xfeCut" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
+		<Programs Count="3">
+		
+			<Program Type="Normal" Format="GLSL" Location="/home/kishalay/Projects/Canvas/Assets/Shaders/">
+				<Shader Type="Vertex" Filename="normal.vert"/>
+				<Shader Type="Geometry" Filename ="normal.geom"/>
+				<Shader Type="Fragment" Filename="normal.frag"/>
+			</Program>
+			
+			<Program Type="XfeSurface" Format="GLSL" Location="/home/kishalay/Projects/Canvas/Assets/Shaders/">
+				<Shader Type="Vertex" Filename="xfeSurface.vert"/>
+				<Shader Type="Fragment" Filename="xfeSurface.frag"/>
+			</Program>
+			
+			<Program Type="XfeCut" Format="GLSL" Location="/home/kishalay/Projects/Canvas/Assets/Shaders/">
+				<Shader Type="Vertex" Filename="xfeCut.vert"/>
+				<Shader Type="Geometry" Filename="xfeCut.geom"/>
+				<Shader Type="Fragment" Filename="xfeCut.frag"/>
+			</Program>
 		</Programs>
 		
 		<ColorTexture Width="1024" Height="512" Depth="512">

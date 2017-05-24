@@ -38,7 +38,7 @@ namespace Sim {
 				Component (const Component& c) = default;
 				Component& operator = (const Component& c) = default;
 
-				virtual const std::string Name () const = 0;
+				virtual AssetComponentType Type () const = 0;
 
 				virtual bool Initialize (tinyxml2::XMLElement& config, Asset* asset) = 0;
 				virtual void Update () = 0;

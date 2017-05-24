@@ -4,14 +4,17 @@
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -march=native -Wall -Wextra -Wno-unused-parameter")
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG} -fno-inline")
-elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+# Release
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE} -O2")
+	
+# Release with log
 elseif (CMAKE_BUILD_TYPE STREQUAL "ReleaseWithLog")
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O2")
+	
+# Debug or no specified build type
 else ()
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG} -fno-inline")
 endif ()
 
 ################## Optionally enabled logging output ##################

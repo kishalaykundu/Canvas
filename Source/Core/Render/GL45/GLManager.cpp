@@ -14,16 +14,18 @@
 
 #include "Preprocess.h"
 #include "Log.h"
+#include "Types.h"
 
 #include "ConfigParser.h"
 #include "GL/GLUtils.h"
 #include "Render/Window.h"
 #include "Render/GL45/GLXWindow.h"
+#include "Render/GL45/GLProgram.h"
 #include "Render/GL45/GLManager.h"
 
-using std::make_shared;
+using std::move;
+using std::unique_ptr;
 using std::make_unique;
-using std::static_pointer_cast;
 using tinyxml2::XMLElement;
 using tinyxml2::XMLError;
 using tinyxml2::XML_SUCCESS;
@@ -100,12 +102,53 @@ namespace Sim {
 		return static_cast <GLXWindow*> (_window.get ())->NewContext (display, newContext);
 	}
 
+	GLuint GLManager::AddProgram (XMLElement& element)
+	{
+		const char* type = element.Attribute ("Type");
+		if (type == nullptr){
+			LOG_ERROR ("No type specified for GL program");
+			return 0;
+		}
+		ProgramId pid = ProgramIdByName (type);
+		if (pid == ProgramId::Unknown){
+			LOG_ERROR ("Invalide type " << type << " specified for GL program");
+			return 0;
+		}
+
+		// check and see if program already exists (if so, return its Id)
+		auto gp = _programs.find (pid);
+		if (gp != _programs.end ()){
+			return gp->second->Id ();
+		}
+
+		// new program so, we construct one
+		unique_ptr <GLProgram> program = make_unique <GLProgram> ();
+		if (!program->Initialize (element)){
+			LOG_ERROR ("Could not initialize GL program");
+			program.reset ();
+			return 0;
+		}
+		if (!program->Load ()){
+			LOG_ERROR ("Could not load GL program");
+			program.reset ();
+			return 0;
+		}
+		_programs [pid] = move (program);
+		return _programs [pid]->Id ();
+	}
+
 	void GLManager::Mouse (unsigned int b, int x, int y)
 	{
 		_mouseButton = b;
 		_mouseX = x;
 		_mouseY = y;
 	}
+
+	void GLManager::RightMouseMotion (int, int) {}
+	void GLManager::MiddleMouseMotion (int, int) {}
+
+	void GLManager::UpdateProjection () {}
+	void GLManager::UpdateModelview () {}
 
 	bool GLManager::InitializeWindow (XMLElement& element)
 	{

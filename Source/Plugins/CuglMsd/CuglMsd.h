@@ -23,8 +23,8 @@ namespace Sim {
 	class EXPORT CuglMsd : public Plugin {
 
 	public:
-		CuglMsd () = default;
-		~CuglMsd () = default;
+		EXPORT CuglMsd () = default;
+		EXPORT ~CuglMsd () = default;
 
 		CuglMsd (const CuglMsd&) = delete;
 		CuglMsd& operator = (const CuglMsd&) = delete;

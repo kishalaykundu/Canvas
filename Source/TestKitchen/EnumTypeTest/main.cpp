@@ -17,6 +17,9 @@
 using std::ostream;
 using std::string;
 
+using std::cout;
+using std::endl;
+
 enum class MyEnum {ONE, TWO, THREE, UNKNOWN};
 
 inline ostream& operator << (ostream& output, const MyEnum& e) {
@@ -49,9 +52,10 @@ int main ()
 {
 	MyEnum me = MyEnum::TWO;
 
-	LOG ("Enum type with lambda: " << me);
-	LOG ("Enum from string (ONE): " << MyEnumFromString ("ONE"));
-	LOG ("Enum from string (TWO): " << MyEnumFromString ("TWO"));
-	LOG ("Enum from string (THREE): " << MyEnumFromString ("THREE"));
+	cout << "Enum type with lambda: " << me << endl;
+	cout << "Enum from string (ONE): " << MyEnumFromString ("ONE") << endl;
+	cout << "Enum from string (TWO): " << MyEnumFromString ("TWO") << endl;
+	cout << "Enum from string (THREE): " << MyEnumFromString ("THREE") << endl;
+
 	exit (EXIT_SUCCESS);
 }

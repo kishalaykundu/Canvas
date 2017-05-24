@@ -61,7 +61,7 @@ namespace Sim {
 
 		void Quit () {_runFlag = false;}
 
-		RenderManager& GetRenderManager () {return *(_renderManager.get ());}
+		RenderManager* GetRenderManager () {return _renderManager.get ();}
 
 		bool AddPlugin (PluginType id, std::unique_ptr <Plugin>& plugin)
 		{

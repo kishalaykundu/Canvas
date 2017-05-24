@@ -26,59 +26,59 @@ namespace Sim {
 
 	class MemoryPool {
 
-		private:
-			unsigned char** _rawArray;  // array of memory blocks, each split up into pages and connected
-			unsigned char* _head;  // the front of the memory chunk linked list
-			unsigned int _pageSize; // size of single page in bytes
-			unsigned int _numPages;  // number of pages in array
-			unsigned int _numArrays;  // number elements in the memory array
-			bool _allowResize;  // true if we resize the memory pool when it fills up (expensive operation)
+	private:
+		// array of memory blocks, each split up into pages and connected
+		unsigned char** _rawArray = nullptr;
+		// the front of the memory chunk linked list
+		unsigned char* _head = nullptr;
+		// size of single page in bytes
+		unsigned int _pageSize = 0;
+		// number of pages in array
+		unsigned int _numPages = 0;
+		// number elements in the memory array
+		unsigned int _numArrays = 0;
+		// true if we resize the memory pool when it fills up (expensive operation)
+		bool _allowResize = false;
 
-		public:
-			MemoryPool ()
-			: _rawArray (nullptr), _head (nullptr), _pageSize (0),
-				_numPages (0), _numArrays (0), _allowResize (true) {}
-			~MemoryPool ();
+	public:
+		MemoryPool () = default;
+		~MemoryPool ();
 
-		private: // non-allowed copy constructor and assignment operator
-			MemoryPool (const MemoryPool& m)
-			: _rawArray (m._rawArray), _head (m._head), _pageSize (m._pageSize),
-				_numPages (m._numPages), _numArrays (m._numArrays), _allowResize (m._allowResize)
-			{}
-			MemoryPool& operator = (const MemoryPool& m) {return *this;}
+		MemoryPool (const MemoryPool& m) = delete;
+		MemoryPool& operator = (const MemoryPool& m) = delete;
 
-		public:
-			bool Initialize (unsigned int pageSize, unsigned int numPages);
-			void Cleanup ();
+	public:
+		bool Initialize (unsigned int pageSize, unsigned int numPages);
+		void Cleanup ();
 
-			/**
-			 * Function to retrieve a page from the memory pool. This removes the head of
-			 * the linked list, sets the new head to the next page, and returns a pointer
-			 * to the data section of the old head.  If there are no more pages left and
-			 * resize is allowed, then another block of N pages is allocated, where N is
-			 * the number of pages passed into Initialize (). While this is typically a
-			 * very fast function, reallocation is costly, so initial sizes should be chosen
-			 * carefully.
-			 */
-			void* Allocate ();
-			/**
-			 * Function to release a page of memory back into the memory pool for reuse. This
-			 * causes the page to be inserted to the front of the list, ready for the next bit.
-			 */
-			void Free (void *memoryPointer);
+		/**
+		 * Function to retrieve a page from the memory pool. This removes the head of
+		 * the linked list, sets the new head to the next page, and returns a pointer
+		 * to the data section of the old head.  If there are no more pages left and
+		 * resize is allowed, then another block of N pages is allocated, where N is
+		 * the number of pages passed into Initialize (). While this is typically a
+		 * very fast function, reallocation is costly, so initial sizes should be chosen
+		 * carefully.
+		 */
+		void* Allocate ();
+		/**
+		 * Function to release a page of memory back into the memory pool for reuse. This
+		 * causes the page to be inserted to the front of the list, ready for the next bit.
+		 */
+		void Free (void *memoryPointer);
 
-			unsigned int PageSize () const {return _pageSize;}
-			void AllowResize (bool flag) {_allowResize = flag;}
+		unsigned int PageSize () const {return _pageSize;}
+		void AllowResize (bool flag) {_allowResize = flag;}
 
-		private:
-			void Reset (); // resets internal variables
+	private:
+		void Reset (); // resets internal variables
 
-			// internal memory allocation helpers
-			bool GrowArray ();
-			unsigned char* AllocateNewBlock ();
+		// internal memory allocation helpers
+		bool GrowArray ();
+		unsigned char* AllocateNewBlock ();
 
-			// internal linked list management
-			unsigned char* GetNext (unsigned char* block);
-			void SetNext (unsigned char* blockToChange, unsigned char* newNext);
+		// internal linked list management
+		unsigned char* GetNext (unsigned char* block);
+		void SetNext (unsigned char* blockToChange, unsigned char* newNext);
 	};
 }

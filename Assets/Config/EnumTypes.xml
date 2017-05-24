@@ -66,5 +66,12 @@
 		<Type>Collision</Type>
 		<Type>Intersection</Type>
 	</EnumType>
+	
+	<EnumType Name="ProgramId">
+		<Type>Normal</Type>
+		<Type>MSD</Type>
+		<Type>XfeSurface</Type>
+		<Type>XfeCut</Type>
+	</EnumType>
 
 </EnumTypes>

@@ -13,8 +13,16 @@
 #include "Preprocess.h"
 #include "Log.h"
 #include "Types.h"
+
+#include "Asset/Geometry.h"
 #include "Driver/Driver.h"
 
+#include "MsdRender.h"
+#include "MsdPhysics.h"
+#include "CuglMsd.h"
+
+using std::shared_ptr;
+using std::make_shared;
 using std::unique_ptr;
 using std::make_unique;
 using tinyxml2::XMLElement;
@@ -49,16 +57,38 @@ namespace Sim {
 
 	bool CuglMsd::InitializeGeometry (tinyxml2::XMLElement& config, Asset* asset)
 	{
+		shared_ptr <Assets::Component> gc = make_shared <Assets::Geometry> ();
+		if (!gc->Initialize (config, asset)){
+			LOG_ERROR ("Could not initialize geometry component");
+			gc.reset ();
+			return false;
+		}
+		asset->Add (AssetComponentType::Geometry, gc);
+
 		return true;
 	}
 
 	bool CuglMsd::InitializeRender (tinyxml2::XMLElement& config, Asset* asset)
 	{
+		shared_ptr <Assets::Component> rc = make_shared <Assets::MsdRender> ();
+		if (!rc->Initialize (config, asset)){
+			LOG_ERROR ("Could not initialize render component");
+			rc.reset ();
+			return false;
+		}
+		asset->Add (AssetComponentType::Render, rc);
 		return true;
 	}
 
 	bool CuglMsd::InitializePhysics (tinyxml2::XMLElement& config, Asset* asset)
 	{
+		shared_ptr <Assets::Component> pc = make_shared <Assets::MsdPhysics> ();
+		if (!pc->Initialize (config, asset)){
+			LOG_ERROR ("Could not initialize render component");
+			pc.reset ();
+			return false;
+		}
+		asset->Add (AssetComponentType::Physics, pc);
 		return true;
 	}
 }

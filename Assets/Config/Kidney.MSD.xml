@@ -8,9 +8,19 @@
 	
 	<Render>
 	
-		<Programs Count="2">
-			<Program Type="Normal" Prefix="normal" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
-			<Program Type="Render" Prefix="msd" Location="/home/kishalay/Projects/Chimera/Assets/Shaders/"/>
+		<Programs Count="2"> <!-- Program format should be "GLSL" or "SPIR-V" -->
+		
+			<Program Type="Normal" Format="GLSL" Location="/home/kishalay/Projects/Canvas/Assets/Shaders/">
+				<Shader Type="Vertex" Filename="normal.vert"/>
+				<Shader Type="Geometry" Filename ="normal.geom"/>
+				<Shader Type="Fragment" Filename="normal.frag"/>
+			</Program>
+			
+			<Program Type="MSD" Format="GLSL" Location="/home/kishalay/Projects/Canvas/Assets/Shaders/">
+				<Shader Type="Vertex" Filename="msd.vert"/>
+				<Shader Type="Fragment" Filename="msd.frag"/>
+			</Program>
+			
 		</Programs>
 		
 		<NormalTexture Location="/home/kishalay/Projects/Chimera/Assets/Data/Kidney/Mesh/Low/kidney.texn"/>

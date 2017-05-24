@@ -34,7 +34,9 @@ namespace Sim {
 
 	bool Asset::Initialize (XMLElement& elem)
 	{
+#		ifdef SIM_LOG_ENABLED
 		const char* name = elem.Attribute ("Name");
+#		endif
 
 		XMLElement* clist = elem.FirstChildElement ("Component");
 		if (clist == nullptr){

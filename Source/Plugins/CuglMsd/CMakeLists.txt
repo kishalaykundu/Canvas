@@ -8,7 +8,7 @@ include_directories (
 	${SIM_SOURCE_DIR}/Packages/TinyXML
 	${SIM_SOURCE_DIR}/Packages/LodePNG
 	${SIM_SOURCE_DIR}/Packages/FastCallback
-	./
+	${SIM_SOURCE_DIR}/Plugins/CuglMsd/
 	${SIM_SOURCE_DIR}/Common/
 	${SIM_SOURCE_DIR}/Core/
 	${SIM_SOURCE_DIR}/Apps/)
@@ -21,7 +21,8 @@ set (CUGLMSD_SRCS ${CUGLMSD_SRCS}
 	${SIM_SOURCE_DIR}/Common/GL/GLUtils.cpp
 	${SIM_SOURCE_DIR}/Common/PNGUtils.cpp
 	${SIM_SOURCE_DIR}/Common/Vector.cpp
-	${SIM_SOURCE_DIR}/Common/ConfigParser.cpp)
+	${SIM_SOURCE_DIR}/Common/ConfigParser.cpp
+	${SIM_SOURCE_DIR}/Core/Asset/Geometry.cpp)
 
 # Add local source files
 file (GLOB CUGLMSD_DIR_SRCS "*.cpp")

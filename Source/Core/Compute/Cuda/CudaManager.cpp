@@ -25,7 +25,7 @@ namespace Sim {
 	{
 #		ifdef SIM_GL_ENABLED
 
-		GLManager* gm = static_cast <GLManager*> (&(Driver::Instance ().GetRenderManager ()));
+		GLManager* gm = static_cast <GLManager*> (Driver::Instance ().GetRenderManager ());
 		if (!gm->MakeNewContext (_display, _gpuContext)){
 			LOG_ERROR ("Could not create GLX context for CUDA HPC Manager");
 		  return false;

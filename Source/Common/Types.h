@@ -369,4 +369,42 @@ namespace Sim {
 		 return AssetComponentType::Unknown;
 	 };
 
+	 enum class ProgramId {
+		Normal,
+		MSD,
+		XfeSurface,
+		XfeCut,
+		Unknown
+	 };
+
+	 inline ostream& operator << (ostream& output, const ProgramId& id)
+	 {
+		 switch (id){
+		 case ProgramId::Normal: output << "Normal"; break;
+		 case ProgramId::MSD: output << "MSD"; break;
+		 case ProgramId::XfeSurface: output << "XfeSurface"; break;
+		 case ProgramId::XfeCut: output << "XfeCut"; break;
+		 default: output << "Unknown"; break;
+		 }
+		 return output;
+	 }
+
+	 auto ProgramIdByName = [=] (const char* chr)
+	 {
+		 string str (chr);
+		 if (!str.compare ("Normal")){
+			 return ProgramId::Normal;
+		 }
+		 else if (!str.compare ("MSD")){
+			 return ProgramId::MSD;
+		 }
+		 else if (!str.compare ("XfeSurface")){
+			 return ProgramId::XfeSurface;
+		 }
+		 else if (!str.compare ("XfeCut")){
+			 return ProgramId::XfeCut;
+		 }
+		 return ProgramId::Unknown;
+	 };
+
 }

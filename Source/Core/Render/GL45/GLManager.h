@@ -9,6 +9,7 @@
  */
 #pragma once
 
+#include <map>
 #include <memory>
 
 #include "tinyxml2.h"
@@ -16,10 +17,9 @@
 #include "GL/GLUtils.h"
 #include "AxisAlignedBox.h"
 #include "Render/RenderManager.h"
+#include "Render/GL45/GLProgram.h"
 
 namespace Sim {
-
-	class GLProgram;
 
 	class GLManager : public RenderManager {
 
@@ -81,7 +81,7 @@ namespace Sim {
 		GLreal _cameraPosition [4] = {0., 0., 0., 1.};
 		GLreal _cameraScales [3] = {0., 0., 0.};
 
-		//std::map <std::string, std::shared_ptr <GLProgram> > _programs;
+		std::map <ProgramId, std::unique_ptr <GLProgram> > _programs;
 
 		unsigned int _numLights = 0;
 		std::unique_ptr <DirectionalLight []> _directionalLights;
@@ -98,6 +98,7 @@ namespace Sim {
 		void Cleanup () override;
 
 		bool MakeNewContext (Display*& display, GLXContext& newContext);
+		GLuint AddProgram (tinyxml2::XMLElement&);
 
 	protected:
 		void Mouse (unsigned int, int, int);
