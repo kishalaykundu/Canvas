@@ -22,6 +22,7 @@
 #include "Render/GL45/GLXWindow.h"
 #include "Render/GL45/GLProgram.h"
 #include "Render/GL45/GLManager.h"
+#include "Driver/Driver.h"
 
 using std::move;
 using std::unique_ptr;
@@ -91,6 +92,9 @@ namespace Sim {
 		// clear from previous frame
 		glClearBufferfv (GL_COLOR, 0, _background);
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// first get any x-events
+		UpdateWindow ();
 	}
 
 	void GLManager::Cleanup ()
@@ -144,11 +148,78 @@ namespace Sim {
 		_mouseY = y;
 	}
 
+	void GLManager::LeftMouseMotion (int, int) {}
 	void GLManager::RightMouseMotion (int, int) {}
 	void GLManager::MiddleMouseMotion (int, int) {}
 
 	void GLManager::UpdateProjection () {}
 	void GLManager::UpdateModelview () {}
+
+	void GLManager::UpdateWindow ()
+	{
+		GLXWindow* w = static_cast <GLXWindow*> (_window.get ());
+	 	XNextEvent(w->_display, &w->_event);
+
+	 	switch (w->_event.type) {
+
+	 	case Expose:
+	 	{
+			XGetWindowAttributes(w->_display, w->_window, &w->_attributes);
+			if (w->_width != static_cast <unsigned int> (w->_attributes.width) ||
+					w->_height != static_cast <unsigned int> (w->_attributes.height)){
+				w->Resize (w->_attributes.width, w->_attributes.height);
+				UpdateProjection ();
+			}
+			break;
+	 	}
+	 	case ButtonPress:
+	 	{
+	 		Mouse (w->_event.xbutton.button, w->_event.xbutton.x, w->_event.xbutton.y);
+	 		break;
+	 	}
+	 	case MotionNotify:
+	 	{
+	 		switch (w->_event.xmotion.state){
+	 			case Button1Mask:
+	 				LeftMouseMotion (w->_event.xmotion.x, w->_event.xmotion.y);
+	 				break;
+	 			case Button2Mask:
+	 				RightMouseMotion (w->_event.xmotion.x, w->_event.xmotion.y);
+	 				break;
+	 			case Button3Mask:
+	 				MiddleMouseMotion (w->_event.xmotion.x, w->_event.xmotion.y);
+	 				break;
+	 		}
+	 		break;
+	 	}
+	 	case KeyPress :
+	 	{
+			char buff [20];
+			unsigned int buffsize = 20;
+			KeySym key;
+			XComposeStatus compose;
+			XLookupString (&w->_event.xkey, buff, buffsize, &key, &compose);
+
+			LOG ("Input Key: " << buff);
+			switch (key) {
+
+			case XK_q: case XK_Q: case XK_Escape:
+			{
+		 		Driver::Instance ().Quit ();
+				break;
+			}
+
+			default:
+				break;
+			}
+	 		break;
+	 	}
+	 	default:
+	 		LOG_ERROR ("Unrecognized XEvent");
+	 		break;
+	 	}
+
+	}
 
 	bool GLManager::InitializeWindow (XMLElement& element)
 	{
@@ -350,6 +421,8 @@ namespace Sim {
 
 		glEnable (GL_LINE_SMOOTH);
 		glEnable (GL_POLYGON_SMOOTH);
+
+		glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 
 #		ifndef NDEBUG
 		glEnable (GL_DEBUG_OUTPUT);

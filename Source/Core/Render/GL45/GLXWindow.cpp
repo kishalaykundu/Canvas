@@ -150,69 +150,7 @@ namespace Sim {
 		return true;
 	}
 
-	void GLXWindow::Update ()
-	{
-	 	XNextEvent(_display, &_event);
-
-	 	switch (_event.type) {
-
-	 	case Expose:
-	 	{
-			XGetWindowAttributes(_display, _window, &_attributes);
-			if (_width != static_cast <unsigned int> (_attributes.width) ||
-					_height != static_cast <unsigned int> (_attributes.height)){
-				Resize (_attributes.width, _attributes.height);
-				//_renderer->UpdateProjection ();
-			}
-			break;
-	 	}
-	 	case ButtonPress:
-	 	{
-	 		//_renderer->Mouse (_event.xbutton.button, _event.xbutton.x, _event.xbutton.y);
-	 		break;
-	 	}
-	 	case MotionNotify:
-	 	{
-	 		switch (_event.xmotion.state){
-	 			case Button1Mask:
-	 				//_renderer->LeftMouseMotion (_event.xmotion.x, _event.xmotion.y);
-	 				break;
-	 			case Button2Mask:
-	 				//_renderer->RightMouseMotion (_event.xmotion.x, _event.xmotion.y);
-	 				break;
-	 			case Button3Mask:
-	 				//_renderer->MiddleMouseMotion (_event.xmotion.x, _event.xmotion.y);
-	 				break;
-	 		}
-	 		break;
-	 	}
-	 	case KeyPress :
-	 	{
-			char buff [20];
-			unsigned int buffsize = 20;
-			KeySym key;
-			XComposeStatus compose;
-			XLookupString (&_event.xkey, buff, buffsize, &key, &compose);
-
-			LOG ("Input Key: " << buff);
-			switch (key) {
-
-			case XK_q: case XK_Q: case XK_Escape:
-			{
-		 		Driver::Instance ().Quit ();
-				break;
-			}
-
-			default:
-				break;
-			}
-	 		break;
-	 	}
-	 	default:
-	 		LOG_ERROR ("Unrecognized XEvent");
-	 		break;
-	 	}
-	}
+	void GLXWindow::Update () {}
 
 	void GLXWindow::Cleanup ()
 	{

@@ -17,6 +17,8 @@ namespace Sim {
 
 	class GLXWindow : public Window {
 
+		friend class GLManager;
+
 	protected:
 		// X-Window Attributes
 		::Window _window = 0;

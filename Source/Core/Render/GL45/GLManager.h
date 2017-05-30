@@ -108,6 +108,7 @@ namespace Sim {
 
 		void UpdateProjection ();
 		void UpdateModelview ();
+		void UpdateWindow ();
 
 		bool InitializeWindow (tinyxml2::XMLElement&);
 		void SetWindowBackground (tinyxml2::XMLElement&);

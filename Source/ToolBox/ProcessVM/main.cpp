@@ -30,7 +30,7 @@ int main (int argc, const char** argv)
 	// sanity check
 	if (argc == 2) {
 		if (!strcmp (argv [1], "-h") || !strcmp (argv [1], "--help")){
-			LOG ("Usage: ./Bin/processvm <config file> (default: Assets/Config/VMConfig.xml)");
+			std::cout << "Usage: ./Bin/processvm <config file> (default: Assets/Config/VMConfig.xml)" << std::endl;
 			exit (EXIT_SUCCESS);
 		}
 	}
@@ -251,6 +251,13 @@ int main (int argc, const char** argv)
 		vm.Height () = height;
 		vm.From () = start;
 		vm.To () = end;
+
+		const char* rgbout = segments->Attribute ("RGBOut");
+		if (rgbout != nullptr){
+			if (!strcmp ("True", rgbout)){
+				vm.WriteRgb () = true;
+			}
+		}
 
 		if (!vm.Process (lcount, labels)){
 			LOG ("ERROR: Could not read data files for " << name << " in " << input);

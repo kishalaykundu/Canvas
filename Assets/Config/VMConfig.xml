@@ -11,27 +11,27 @@
 	
 	<Segments Count="4">
 		
-		<Data Name="GallBladder" Output="Assets/Data/GallBladder/Textures/">
+		<Data Name="GallBladder" Output="Assets/Data/GallBladder/Textures/" RGBOut="True">
 			<Labels Count="1">
 				<Item>1002</Item>
 			</Labels>
 		</Data>
 		
-		<Data Name="LeftKidney" Output="Assets/Data/LeftKidney/Textures/">
+		<Data Name="LeftKidney" Output="Assets/Data/LeftKidney/Textures/" RGBOut="True">
 			<Labels Count="2">
 				<Item>1531</Item>
 				<Item>1532</Item>
 			</Labels>
 		</Data>
 		
-		<Data Name="RightKidney" Output="Assets/Data/RightKidney/Textures/">
+		<Data Name="RightKidney" Output="Assets/Data/RightKidney/Textures/" RGBOut="True">
 			<Labels Count="2">
 				<Item>1534</Item>
 				<Item>1536</Item>
 			</Labels>
 		</Data>
 		
-		<Data Name="Liver" Output="Assets/Data/Liver/Textures/">
+		<Data Name="Liver" Output="Assets/Data/Liver/Textures/" RGBOut="True">
 			<Labels Count="14">
 				<Item>3001</Item>
 				<Item>3002</Item>

@@ -80,7 +80,7 @@ int main (int argc, const char** argv)
 	}
 	filename += "Types.h";
 
-	ofstream file (filename.c_str (), ios::out | ios::trunc);
+	ofstream file (filename, ios::out | ios::trunc);
 	if (!file.is_open ()){
 		LOG_ERROR ("Could not open " << filename);
 		exit (EXIT_FAILURE);

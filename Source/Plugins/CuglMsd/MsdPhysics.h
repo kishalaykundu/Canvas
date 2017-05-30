@@ -23,7 +23,9 @@ namespace Sim {
 
 		protected:
 			CUgraphicsResource* _vertices = nullptr;
-			CUdeviceptr* _indices = nullptr;
+
+			unsigned int _numSprings = 0;
+			CUdeviceptr _indices = 0;
 
 		public:
 			MsdPhysics () = default;

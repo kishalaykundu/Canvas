@@ -18,6 +18,7 @@ namespace Sim {
 	class VMProcessor {
 
 	protected:
+		bool _rgbOut = false;
 		unsigned int _width = 0, _height = 0, _from = 0, _to = 0;
 		unsigned int _wBounds [2] = {0, 0};
 		unsigned int _hBounds [2] = {0, 0};
@@ -50,6 +51,7 @@ namespace Sim {
 		unsigned int& Height () {return _height;}
 		unsigned int& From () {return _from;}
 		unsigned int& To () {return _to;}
+		bool& WriteRgb () {return _rgbOut;}
 
 		bool Process (unsigned int nlabels, unsigned int* labels);
 
@@ -64,6 +66,8 @@ namespace Sim {
 		bool ReadPngFile (const char* file, std::vector <unsigned char>& data);
 		bool ReadTiffFile (const char* file, std::vector <unsigned short>& data);
 		bool WriteTexFile (const char* suffix, std::vector <std::vector <unsigned char> >& data);
+
+		bool WritePngStack ();
 
 		bool WriteInfoFile ();
 	};

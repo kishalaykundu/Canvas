@@ -7,9 +7,15 @@
  * @section DESCRIPTION
  * See VMProcessor.h.
  */
+extern "C"{
+#	include <sys/stat.h>
+#	include <sys/types.h>
+}
 
 #include <string>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 #include "tinyxml2.h"
 #include "lodepng.h"
@@ -19,6 +25,8 @@
 #include "PNGUtils.h"
 #include "VMProcessor.h"
 
+using std::ofstream;
+using std::ios;
 using std::vector;
 using std::string;
 using tinyxml2::XMLElement;
@@ -47,6 +55,12 @@ namespace Sim {
 			LOG_ERROR ("RGB data could not be successfully processed");
 			Cleanup ();
 			return false;
+		}
+
+		if (_rgbOut){
+			if (!WritePngStack ()){
+				LOG_ERROR ("Could not write rgb data to PNG files");
+			}
 		}
 
 		// write out texture file and deallocate data
@@ -151,11 +165,9 @@ namespace Sim {
 							sliceFlag = true;
 							_wBounds [0] = _wBounds [0] > k ? k : _wBounds [0];
 							_wBounds [1] = _wBounds [1] < k ? k : _wBounds [1];
+							_hBounds [0] = _hBounds [0] > j ? j : _hBounds [0];
+							_hBounds [1] = _hBounds [1] < j ? j : _hBounds [1];
 						}
-					}
-					if (sliceFlag){
-						_hBounds [0] = _hBounds [0] > j ? j : _hBounds [0];
-						_hBounds [1] = _hBounds [1] < j ? j : _hBounds [1];
 					}
 				}
 				if (sliceFlag){
@@ -366,15 +378,44 @@ namespace Sim {
 
 	bool VMProcessor::WriteTexFile (const char* suffix, vector <vector <unsigned char> >& data)
 	{
-		string file (_outfolder + _prefix);
-		file += suffix;
+		string filename (_outfolder + _prefix);
+		filename += suffix;
 
-		FILE* fp = fopen (file.c_str (), "wb");
+		ofstream file (filename, ios::out | ios::trunc);
+		if (!file.is_open ()){
+			LOG_ERROR ("Could not open " << filename);
+			return false;
+		}
 		for (unsigned int i = 0; i < data.size (); ++i){
-			fwrite (data [i].data (), sizeof (unsigned char), data [i].size (), fp);
+			file.write (reinterpret_cast <char*>(&(data [i])), data [i].size ());
 		}
 
-		fclose (fp);
+		file.close ();
+		return true;
+	}
+
+	// write stack of PNG format RGB data
+	bool VMProcessor::WritePngStack ()
+	{
+		string prefix (_outfolder);
+		prefix += "PngRgb/";
+
+		// check and create directory
+		mkdir (prefix.c_str(), 0755);
+
+		prefix += "rgb";
+		for (unsigned int i = 0; i < _vDepth; ++i){
+			string file (prefix);
+			file += std::to_string (i);
+			file += ".png";
+
+			PNGEncoder enc (file.c_str (), _vWidth, _vHeight);
+			if (!enc (_rgb [i])){
+				LOG_ERROR ("Could not write to " << file);
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -384,6 +425,32 @@ namespace Sim {
 		tinyxml2::XMLDocument doc;
 		tinyxml2::XMLNode* root = doc.NewElement ("VMInfo");
 		doc.InsertFirstChild (root);
+
+		XMLElement* location = doc.NewElement ("Location");
+		location->SetText (_outfolder.c_str ());
+
+		root->InsertFirstChild (location);
+
+		XMLElement *mask = doc.NewElement ("Mask");
+		string maskfile (_prefix);
+		maskfile += ".mask.tex3";
+		mask->SetText (maskfile.c_str ());
+
+		root->InsertEndChild (mask);
+
+		XMLElement *rgb = doc.NewElement ("RGB");
+		string rgbfile (_prefix);
+		rgbfile += ".rgb.tex3";
+		rgb->SetText (rgbfile.c_str ());
+
+		root->InsertEndChild (rgb);
+
+		XMLElement *ct = doc.NewElement ("CT");
+		string ctfile (_prefix);
+		ctfile += ".ct.tex3";
+		ct->SetText (ctfile.c_str ());
+
+		root->InsertEndChild (ct);
 
 		XMLElement* dims = doc.NewElement ("Dimensions");
 		dims->SetAttribute ("Width", _vWidth);
