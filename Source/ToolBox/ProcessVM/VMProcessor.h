@@ -63,6 +63,8 @@ namespace Sim {
 		bool ProcessRGB (unsigned int nlabels, unsigned int* labels);
 		bool ProcessCT (unsigned int nlabels, unsigned int* labels);
 
+		bool ConnectedComponents ();
+
 		bool ReadPngFile (const char* file, std::vector <unsigned char>& data);
 		bool ReadTiffFile (const char* file, std::vector <unsigned short>& data);
 		bool WriteTexFile (const char* suffix, std::vector <std::vector <unsigned char> >& data);

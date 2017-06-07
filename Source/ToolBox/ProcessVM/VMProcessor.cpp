@@ -40,6 +40,7 @@ namespace Sim {
 			return false;
 		}
 
+		// extract the smallest possible volume (padded by 2 on each side) from the larger dataset
 		if (!ProcessMask (nlabels, labels)){
 			LOG_ERROR ("Labels could not be successfully processed");
 			Cleanup ();
@@ -50,6 +51,14 @@ namespace Sim {
 		LOG ("Width - " << _vWidth << ". Bounds: " << _wBounds [0] << " - " << _wBounds [1]);
 		LOG ("Height - " << _vHeight << ". Bounds: " << _hBounds [0] << " - " << _hBounds [1]);
 		LOG ("Depth - " << _vDepth << ". Bounds: " << _dBounds [0] << " - " << _dBounds [1]);
+
+		// take out disconnected components from segmented values
+		if (!ConnectedComponents ()){
+			LOG_ERROR ("Could not extract connected components");
+			return false;
+		}
+
+		return true;
 
 		if (!ProcessRGB (nlabels, labels)){
 			LOG_ERROR ("RGB data could not be successfully processed");
@@ -330,6 +339,47 @@ namespace Sim {
 			ct [i].clear ();
 		}
 		ct.clear ();
+
+		return true;
+	}
+
+	bool VMProcessor::ConnectedComponents ()
+	{
+		vector <vector <bool> > visited (_mask.size ());
+
+		// make all 0-valued voxels as visited
+		unsigned int count = 0;
+		bool found = false;
+		unsigned int first [3] = {0, 0, 0};
+
+		for (unsigned int i = 0; i < _mask.size (); ++i){
+			visited [i] = vector <bool> (_mask [i].size (), false);
+
+			for (unsigned int j = 0; j < _vHeight; ++j){
+				for (unsigned int k = 0; k < _vWidth; ++k){
+
+					if (!_mask [i][j*_vWidth + k]){
+						visited [i][j*_vWidth + k] = true;
+					}
+					else {
+						if (!found){
+							found = true;
+							first [0] = k; first [1] = j; first [2] = i;
+						}
+						++count;
+					}
+
+				}
+			}
+		}
+		LOG (count << " non-zero voxels found out of a total of " << _mask.size ()*_mask [0].size ());
+
+		// do a breadth-first traversal to find connected components
+		int indices [27];
+		for (unsigned int i = 0; i < 27; ++i){
+			indices [i] = -1;
+		}
+
 
 		return true;
 	}
